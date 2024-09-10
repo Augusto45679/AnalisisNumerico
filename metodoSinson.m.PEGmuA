@@ -1,0 +1,60 @@
+function metodoSinson %Este es el Ejercicio2 del TP
+%Datos
+Im=0; IM=0; IT=0; % Riemman menor;Riemman mayor; Trapecios
+N=8; %num,ero de intervalos
+t0=0; tf=0.5; % Rango de las absisas
+
+w=2*pi; %Frecuencia
+%datos discretizar
+dt=(tf-t0)/N ; %Incremento de la abscisa
+dim=N+1; %dimension de los vectores
+
+%Discretizar
+for k=1 : dim
+  tg(k)=t0+(k-1)*dt;
+  yg(k)=sin(pi*tg(k)); %vamo hacer un coseno pa probar
+end
+%Graficar
+figure(1)
+plot(tg,yg,'ob')
+grid on
+legend('N=12')
+
+%Calculos de Riemman y Trapecios
+for k=1 : dim-1 % dim-1=N || RIEMANN MENOR
+  Im=Im + dt*yg(k);
+end
+
+  for k=2 :dim %dim=N+1 (es la dimension del vector) || RIEMANN Mayor
+  IM=IM + dt*yg(k);
+end
+
+for k=1:dim-1 % TRAPECIOS
+  IT=IT+dt*(yg(k)+yg(k+1))/2;
+end
+
+%METODO DEL SINSOOOOOONNNN!!!!!!!!
+ISim=0;
+for k=2:2:N
+  ISim = ISim + dt*(yg(k-1)+4*yg(k)+yg(k+1))/3;
+end
+ISim = ISim*dt;
+display(dt)
+%logaritmos falopas
+Er = abs(ISim-1/pi);
+
+for i=2:N
+  log_dt(i) = log10(dt);
+  log_Er(i) = log10(Er);
+  pendiente(i)= (log_Er(i) - log_Er(i-1)) / ( log_dt(i) -  log_dt(i-1));
+end
+
+% Mostrar resultados con formato
+fprintf('Resultados del cálculo:\n\n')
+fprintf('Error (Er) = %.6f\n', Er)
+fprintf('ISim Isim*dt = %.6f\n', ISim)
+fprintf('Logaritmo de delta t (log_dt) = %.4f\n', log_dt)
+fprintf('Logaritmo del error (log_Er) = %.4f\n', log_Er)
+fprintf('Pendiente = %.4f\n', pendiente)
+fprintf('\n') % Línea en blanco para separación adicional
+endfunction

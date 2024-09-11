@@ -89,6 +89,33 @@ end
     fprintf('%.8f        %.8f\n',   k2_y1(i),  k2_y2(i));
   end
 
+% Graficar las soluciones aproximadas
+figure;
+plot(t*10, Auxiliar_y1, '-o', 'DisplayName', 'y1');
+hold on;
+plot(t*10, Auxiliar_y2, '-s', 'DisplayName', 'y2');
+xlabel('t');
+ylabel('y');
+title('Soluciones Aproximadas');
+legend show;
+grid on;
 
+% Graficar los errores (si tienes una solución analítica)
+% Supongamos que tienes una solución analítica y1_exacto y y2_exacto
+% y1_exacto = ...; % Define la solución analítica para y1
+% y2_exacto = ...; % Define la solución analítica para y2
+
+% error_y1 = abs(Auxiliar_y1 - y1_exacto);
+% error_y2 = abs(Auxiliar_y2 - y2_exacto);
+
+% figure;
+% plot(t, error_y1, '-o', 'DisplayName', 'Error y1');
+% hold on;
+% plot(t, error_y2, '-s', 'DisplayName', 'Error y2');
+% xlabel('t');
+% ylabel('Error');
+% title('Errores');
+% legend show;
+% grid on;
 endfunction
 

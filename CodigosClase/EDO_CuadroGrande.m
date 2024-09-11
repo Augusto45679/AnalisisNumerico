@@ -18,6 +18,11 @@ yg_y2 = zeros(length(t));
 k2_y2 = zeros(length(t));
 Y_y2 =  zeros(length(t));
 
+Auxiliar_y1 = zeros(length(t)); % En el cuadro sería y1 (segunda fila)
+
+Auxiliar_y2 = zeros(length(t)); % En el cuadro sería y2 (tercer fila)
+
+
 for i=1:length(t) %y1
   t_A = t(i);
 
@@ -48,17 +53,22 @@ for i=1:length(t) %y1
   k2_y2_A  = k2_y2(i) ; %aux
 
   Y_y1(i) = y1 + (1-w)*k1_y1_A + w*k2_y1_A ;
-  y1 = Y_y1(i); %aux
+  y1 = Y_y1(i); %aux pero para el calculo del for
+
+  Auxiliar_y1(i) = y1; % auxiliar pero para la muestra de datos
 
   Y_y2(i) = y2 + (1-w)*k1_y1_A + w*k2_y1_A ;
-  y2 = Y_y2(i); %aux
+  y2 = Y_y2(i); %aux pero para el calculo del for
+
+  Auxiliar_y2(i) = y2; % auxiliar pero para la muestra de datos
+
 
 end
 
 % Mostrar resultados de a tres columnas
   disp('t                    y1                    y2');
   for i=1:length(t)
-    fprintf('%.8f         %.8f         %.8f\n', t(i),Y_y1(i), Y_y2(i));
+    fprintf('%.8f         %.8f         %.8f\n', t(i),Auxiliar_y1(i),  Auxiliar_y2(i));
   end
 
   disp(" ");
@@ -79,16 +89,6 @@ end
     fprintf('%.8f        %.8f\n',   k2_y1(i),  k2_y2(i));
   end
 
-  % Graficar los resultados
-  figure;
-  plot(t, Y_y1, '-o', 'DisplayName', 'y_1(t)');
-  hold on;
-  plot(t, Y_y2, '-x', 'DisplayName', 'y_2(t)');
-  xlabel('t');
-  ylabel('y(t)');
-  title('Solución aproximada del sistema de EDO');
-  legend show;
-  grid on;
-  hold off;
+
 endfunction
 

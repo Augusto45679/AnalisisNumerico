@@ -41,7 +41,7 @@ for i=1:length(t) %y1
   yg_y1(i) = y1 + k1_y1_A * 1/2*w;
   yg_y1_A = yg_y1(i); %aux
 
-  yg_y2(i) = y1 + k1_y2_A * 1/2*w;
+  yg_y2(i) = y2 + k1_y2_A * 1/2*w;
   yg_y2_A = yg_y2(i); %aux
 
   %Calculos de K2 de 1 y 2
@@ -57,7 +57,7 @@ for i=1:length(t) %y1
 
   Auxiliar_y1(i) = y1; % auxiliar pero para la muestra de datos
 
-  Y_y2(i) = y2 + (1-w)*k1_y1_A + w*k2_y1_A ;
+  Y_y2(i) = y2 + (1-w)*k1_y2_A + w*k2_y2_A ;
   y2 = Y_y2(i); %aux pero para el calculo del for
 
   Auxiliar_y2(i) = y2; % auxiliar pero para la muestra de datos

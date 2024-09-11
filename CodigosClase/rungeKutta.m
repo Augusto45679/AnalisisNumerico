@@ -37,9 +37,18 @@ end
 
 %Muestra de datos
 
-for i=1:length(t)
-
-  fprintf('%.8f        %.8f       %.8f      %.8f  ',t,k1(i),tg(i));
+ disp('t                    y                   k1');
+  for i=1:length(t)
+    fprintf('%.8f         %.8f         %.8f\n', t(i),y0, k1(i));
   end
 
+  disp(" ");
+  disp('yg                 xg                k2');
+  for i=1:length(t)
+    fprintf('%.8f         %.8f         %.8f\n',  yg(i),  tg(i), k2(i));
+  end
+
+  disp(" ");
+  disp('Y              ');
+  display(Y);
   endfunction

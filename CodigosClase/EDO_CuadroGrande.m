@@ -55,9 +55,40 @@ for i=1:length(t) %y1
 
 end
 
-for i=1:length(t)
-
-  fprintf('%.8f        %.8f       %.8f      %.8f  ',t,k1_y1(i),k2_y1(i));
+% Mostrar resultados de a tres columnas
+  disp('t                    y1                    y2');
+  for i=1:length(t)
+    fprintf('%.8f         %.8f         %.8f\n', t(i),Y_y1(i), Y_y2(i));
   end
+
+  disp(" ");
+  disp('K1 y1                K1 y2               tg');
+  for i=1:length(t)
+    fprintf('%.8f         %.8f         %.8f\n', k1_y1(i),  k1_y2(i),  tg_y(i));
+  end
+
+  disp(" ");
+  disp('YG 1              YG 2                     ');
+  for i=1:length(t)
+    fprintf('%.8f        %.8f\n',  yg_y1(i), yg_y2(i));
+  end
+
+  disp(" ");
+  disp('K2 y1              K2 y2');
+  for i=1:length(t)
+    fprintf('%.8f        %.8f\n',   k2_y1(i),  k2_y2(i));
+  end
+
+  % Graficar los resultados
+  figure;
+  plot(t, Y_y1, '-o', 'DisplayName', 'y_1(t)');
+  hold on;
+  plot(t, Y_y2, '-x', 'DisplayName', 'y_2(t)');
+  xlabel('t');
+  ylabel('y(t)');
+  title('Solución aproximada del sistema de EDO');
+  legend show;
+  grid on;
+  hold off;
 endfunction
 

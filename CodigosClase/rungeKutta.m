@@ -11,6 +11,7 @@ tg = zeros(length(t));
 yg = zeros(length(t));
 k2 = zeros(length(t));
 Y = zeros(length(t));
+Aux_y = [y0,0,0];
 
 %definir funcion
 
@@ -32,6 +33,7 @@ for i=1: length(t)
 
  Y(i) = y0 + (1-w)*k_A + w*k2_A;
   y0 = Y(i)  ;
+  Aux_y(i) = y0;
 
 end
 
@@ -39,7 +41,7 @@ end
 
  disp('t                    y                   k1');
   for i=1:length(t)
-    fprintf('%.8f         %.8f         %.8f\n', t(i),y0, k1(i));
+    fprintf('%.8f         %.8f         %.8f\n', t(i),Aux_y(i), k1(i));
   end
 
   disp(" ");

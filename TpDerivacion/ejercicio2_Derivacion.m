@@ -21,7 +21,7 @@ x0=0; xf=2*pi; % periodo
     df2 = zeros(length(x));
 
     % Derivada primera (central) con orden de error 2
-    for j = 2:N
+    for j = 2:N %calculamos de esta manera para los valores proximos
       df1(j) = (f(x(j+1)) - f(x(j-1))) / (2*dx);
     end
 
@@ -30,6 +30,31 @@ x0=0; xf=2*pi; % periodo
       df2(j) = (f(x(j+1)) - 2*f(x(j)) + f(x(j-1))) / (dx^2);
     end
 
-  end
+    % Comparar con las derivadas exactas
+    df1_exacta_values = df1_exacta(x);
+    df2_exacta_values = df2_exacta(x);
 
+
+     % Gráficas
+    figure;
+
+    % Derivada primera
+    subplot(2, 1, 1);
+    plot(x, df1_exacta_values, 'r', 'LineWidth', 2); hold on;
+    plot(x(2:end-1), df1_numerica(2:end-1), 'bo', 'MarkerSize', 5); hold off;
+    title(['Derivada Primera - N = ', num2str(N)]);
+    legend('Exacta', 'Numérica');
+    xlabel('x'); ylabel('df/dx');
+    grid on;
+
+    % Derivada segunda
+    subplot(2, 1, 2);
+    plot(x, df2_exacta_values, 'r', 'LineWidth', 2); hold on;
+    plot(x(2:end-1), df2_numerica(2:end-1), 'bo', 'MarkerSize', 5); hold off;
+    title(['Derivada Segunda - N = ', num2str(N)]);
+    legend('Exacta', 'Numérica');
+    xlabel('x'); ylabel('d²f/dx²');
+    grid on;
+
+  end
   endfunction

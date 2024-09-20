@@ -1,121 +1,77 @@
 function EDO_CuadroGrande
 % Datos
-t = [0,0.01,0.02,0.03,0.04];
 
 y1 = 5; y2 = 3; w=1;
 t0=0;
-deltaT = 0.01;
+dt = 0.01;
+N_dt = 20;
 
-k1_y1 = zeros(length(t));
-tg_y = zeros(length(t));
-yg_y1 = zeros(length(t));
-k2_y1 = zeros(length(t));
-Y_y1 =  zeros(length(t));
+t = zeros(1, N_dt); %esta matriz tiene una fila
+y = zeros(2, N_dt); %esta matriz tiene dos filas
+k1 = zeros(2,N_dt);
 
-k1_y2 = zeros(length(t));
-tg_y2 = zeros(length(t));
-yg_y2 = zeros(length(t));
-k2_y2 = zeros(length(t));
-Y_y2 =  zeros(length(t));
+tg = zeros(1,N_dt);
 
-Auxiliar_y1 = zeros(length(t)); % En el cuadro sería y1 (segunda fila)
+yg = zeros(2,N_dt);
 
-Auxiliar_y2 = zeros(length(t)); % En el cuadro sería y2 (tercer fila)
+k2 = zeros(2,N_dt);
+
+Y_grande = zeros(2,N_dt);
 
 
-for i=1:length(t) %y1
-  t_A = t(i);
+t(1)=t0;
+y(1,1)=y1;
+y(2,1)=y2;
 
-  %CALCULOS de K1 para y1 e y2
-  k1_y1(i) = deltaT*(-10*y1+4*y2);
-  k1_y1_A = k1_y1(i); %aux
+for i=1: N_dt-1
 
-  k1_y2(i) = deltaT*(-4*y1+0*y2);
-  k1_y2_A = k1_y2(i); %aux
+  k1(1,1) = dt*(-10*y(1,i)+4*y(2,i));
+  k1(2,1) = dt*(-4*y(1,i)+0*y(2,i));
 
-  %CALCULOS de TG 1 y 2
-  tg_y(i) = t_A + deltaT/2*w;
-  tg_y_A = tg_y(i); %aux
+  %actualizacion del k1
+  k1(1,1+i)= k1(1,1);
+  k1(2,1+i)= k1(2,1); % aca dejo guardado todos los k1 en la matriz
 
-  %Calculos de YG 1 y 2
-  yg_y1(i) = y1 + k1_y1_A * 1/2*w;
-  yg_y1_A = yg_y1(i); %aux
+  tg(1,i)= t(i) + dt/2*w;
+  %actualizamos los tg
+  tg(1,i+1)= tg(1,i);
 
-  yg_y2(i) = y2 + k1_y2_A * 1/2*w;
-  yg_y2_A = yg_y2(i); %aux
+  yg(1,1) = y(1,1)+ k1(1,1)*1/2*w;
+  yg(2,1) = y(2,1)+ k1(2,1)*1/2*w;
 
-  %Calculos de K2 de 1 y 2
+  %actualizamos los yg
+  yg(1,i+1)= yg(1,1);
+  yg(2,1+i)= yg(2,1);
 
-  k2_y1(i) = deltaT*(-10*yg_y1_A+4*y2);
-  k2_y1_A  = k2_y1(i) ; %aux
+  k2(1,1)= dt*(-10*yg(1,1)+4*y(2,1));
+  k2(2,1)= dt*(-4*yg(1,1)+0*y(2,1));
 
-  k2_y2(i) = deltaT*(-4*yg_y2_A+0*y2);
-  k2_y2_A  = k2_y2(i) ; %aux
+  %actualizacion k2
+  k2(1,1+i)= k2(1,1);
+  k2(2,1+i)= k2(2,1);
 
-  Y_y1(i) = y1 + (1-w)*k1_y1_A + w*k2_y1_A ;
-  y1 = Y_y1(i); %aux pero para el calculo del for
+  Y_grande(1,1) = y(1,1) + k2(1,1); %estos serian los y1(n+1) e y2(n+1)
+  Y_grande(2,1) = y(2,1) + k2(2,1);
 
-  Auxiliar_y1(i) = y1; % auxiliar pero para la muestra de datos
+  %actualizar los y grande
+  Y_grande(1,1+i)= Y_grande(1,1);
+  Y_grande(2,1+i)= Y_grande(2,1);
 
-  Y_y2(i) = y2 + (1-w)*k1_y2_A + w*k2_y2_A ;
-  y2 = Y_y2(i); %aux pero para el calculo del for
+  %guardamos todos los Y
+  y(1,i+1) = y(1,i)+ k1(1,1);
+  y(2,i+1) = y(2,i)+ k1(2,1);
 
-  Auxiliar_y2(i) = y2; % auxiliar pero para la muestra de datos
-
+  t(i+1) = dt + t(i);
 
 end
 
-% Mostrar resultados de a tres columnas
-  disp('t                    y1                    y2');
-  for i=1:length(t)
-    fprintf('%.8f         %.8f         %.8f\n', t(i),Auxiliar_y1(i),  Auxiliar_y2(i));
-  end
-
-  disp(" ");
-  disp('K1 y1                K1 y2               tg');
-  for i=1:length(t)
-    fprintf('%.8f         %.8f         %.8f\n', k1_y1(i),  k1_y2(i),  tg_y(i));
-  end
-
-  disp(" ");
-  disp('YG 1              YG 2                     ');
-  for i=1:length(t)
-    fprintf('%.8f        %.8f\n',  yg_y1(i), yg_y2(i));
-  end
-
-  disp(" ");
-  disp('K2 y1              K2 y2');
-  for i=1:length(t)
-    fprintf('%.8f        %.8f\n',   k2_y1(i),  k2_y2(i));
-  end
 
 % Graficar las soluciones aproximadas
-figure;
-plot(t*10, Auxiliar_y1, '-o', 'DisplayName', 'y1');
-hold on;
-plot(t*10, Auxiliar_y2, '-s', 'DisplayName', 'y2');
-xlabel('t');
-ylabel('y');
-title('Soluciones Aproximadas');
+ figure(1)
+plot(t,y(:,:),'b')
 legend show;
 grid on;
 
-% Graficar los errores (si tienes una solución analítica)
-% Supongamos que tienes una solución analítica y1_exacto y y2_exacto
-% y1_exacto = ...; % Define la solución analítica para y1
-% y2_exacto = ...; % Define la solución analítica para y2
 
-% error_y1 = abs(Auxiliar_y1 - y1_exacto);
-% error_y2 = abs(Auxiliar_y2 - y2_exacto);
-
-% figure;
-% plot(t, error_y1, '-o', 'DisplayName', 'Error y1');
-% hold on;
-% plot(t, error_y2, '-s', 'DisplayName', 'Error y2');
-% xlabel('t');
-% ylabel('Error');
-% title('Errores');
-% legend show;
-% grid on;
 endfunction
 

@@ -12,7 +12,7 @@ y = zeros(N_Dt,1); %vector para y(t)
 t(1)=t0;
 y(1)=y0;
 
-w=1;
+w=1; %El euler modificado lleva w=1 y el mejorado lleva w=0.5
 
 for j=1 : N_Dt-1
 

@@ -4,7 +4,7 @@ function EDO_CuadroGrande
 y1 = 5; y2 = 3; w=1;
 t0=0;
 dt = 0.01;
-N_dt = 20;
+N_dt = 300;
 
 t = zeros(1, N_dt); %esta matriz tiene una fila
 y = zeros(2, N_dt); %esta matriz tiene dos filas

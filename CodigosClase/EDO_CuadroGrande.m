@@ -3,8 +3,8 @@ function EDO_CuadroGrande
 
 y1 = 5; y2 = 3; w=1;
 t0=0;
-dt = 0.01;
-N_dt = 300;
+dt = 0.02;
+N_dt = 100;
 
 t = zeros(1, N_dt); %esta matriz tiene una fila
 y = zeros(2, N_dt); %esta matriz tiene dos filas
@@ -65,7 +65,7 @@ for i=1: N_dt-1
 
 end
 
-
+disp(" ")
 % Graficar las soluciones aproximadas
  figure(1)
 plot(t,y(:,:),'b')

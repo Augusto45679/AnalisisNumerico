@@ -1,8 +1,8 @@
 function eulerAdelante
 
 t0=0; y0=4;
-dt=0.025;
-N_dt = 400;
+dt=0.25;
+N_dt = 127;
 
 t = zeros(1,N_dt);
 y = zeros(1,N_dt);

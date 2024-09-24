@@ -10,7 +10,7 @@ A11=0;A12=1;A21=-14400;A22=-2.4;
 
 b1=0; b2=1;
 
-dt=0.0002;
+dt=0.0002; % esto es 1/fs con fs= 5000
 
 tf = (length(g)-1)*dt;
 
@@ -33,6 +33,8 @@ y(2,1)=x2;
 
 it=0;
 it2=0;
+derivada = zeros(1,length(t));
+
 for i=1:length(t)-1
 
    g_t = g(i);
@@ -47,16 +49,17 @@ for i=1:length(t)-1
 
    it = it + (dt/2) * (y(1,i)^2+y(1,i+1)^2); % I11
 
-   derivada = (y(1,i+1)-y(1,i))/dt; %derivada
+   derivada(1,i+1) = (y(1,i)-y(1,i+1))/dt; %derivada
 
-   it2= it2 + (dt/2)*(derivada^2); %I22
+   it2= it2 + (dt/2)*(derivada(1,i)^2+derivada(1,i+1)^2); %I22
 endfor
 
 
 figure(1)
 plot(t,y(1,:),'b')
+
+disp(['x1(t1) = ', num2str(y(1,5001), '%.3f')])
+disp(['x2(t1) = ', num2str(y(2,5001), '%.3f')])
 disp(" ")
-
-
 endfunction
 

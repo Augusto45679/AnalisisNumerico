@@ -1,20 +1,20 @@
 function primerCodigoResuelto
     clc, clear;
+    % ======= Parámetros iniciales =======
 
-    % Parámetros iniciales
-    Tg = 2 * 5; % periodo de funcion escalon es
-    Td = 5; % 1era duración  del escalon es
-    A1 = 1; A2 = 0; %  Amplitudes    de g(t) son:
-    t0 = 0; % comienzo del intervalo t
-    tf = Tg; % 'el rango de t para g(t) es desde t0 hasta tf'
-    N = 4; % N° de intervalos
-    Dt = (tf - t0) / N; % incremento de t resulta
-    Tp = N * Dt; % periodo (creo que es Periodo Total)
-    w0 = 2 * pi / N; % frecuencia  Fundamental para Min 2
-    dw = w0 / Dt; % incrmento de frecuencia para Min 2
+    Tg = 2 * 5;           % periodo de funcion escalon es
+    Td = 5;               % 1era duración  del escalon es
+    A1 = 1; A2 = 0;       %  Amplitudes    de g(t) son:
+    t0 = 0;               % comienzo del intervalo t
+    tf = Tg;              % 'el rango de t para g(t) es desde t0 hasta tf'
+    N = 4;                % N° de intervalos
+    Dt = (tf - t0) / N;   % incremento de t resulta
+    Tp = N * Dt;          % periodo (creo que es Periodo Total)
+    w0 = 2 * pi / N;      % frecuencia  Fundamental para Min 2
+    dw = w0 / Dt;         % incrmento de frecuencia para Min 2
     m_max = round(N / 2); % multiplo máximo para las frecunecias es
-    m = -1 + N / 2; %  se eligen para senos y cosenos desde 1 a m , Múltiplo de la frecuencia utilizado
-    Nb = 2 * m + 1; % en la Base para Min 2, se toman 2m+1 elementos Nb (Número de elementos en la base para Min 2)
+    m = -1 + N / 2;       %  se eligen para senos y cosenos desde 1 a m , Múltiplo de la frecuencia utilizado
+    Nb = 2 * m + 1;       % en la Base para Min 2, se toman 2m+1 elementos Nb (Número de elementos en la base para Min 2)
     compara_g_P = 1;
 
     % Armado de la función g(t) discreta

@@ -16,34 +16,34 @@ f = @(t) exp(-a*t);
 coseno = @(k, w0, j) cos(k * w0 * (j - 1));
 seno = @(k, w0, j) sin(k * w0 * (j - 1));
 
-%=== Discretizar g(t) ===
- t = t0 +(0:N-1)'*dt;
- g = arrayfun(f,t); % lo que hace arrayfun es que el primer parametro se le aplica al segundo (la f exponencial se la aplica al intervalo t)
- graficarPrimerFuncion(t,g,1);
 
-% === Base trigonometrica ===
 
-  Fi = construirBaseTrigonometrica(N,m,w0,coseno,seno);
+  %=== Discretizar g(t) ===
+  t = t0 +(0:N-1)'*dt;
+  g = arrayfun(f,t); % lo que hace arrayfun es que el primer parametro se le aplica al segundo (la f exponencial se la aplica al intervalo t)
+  graficarPrimerFuncion(t,g,1);
 
-% === Calcular coeficientes para Min2 ===
+
+  % === Base trigonometrica ===
+  [Fi,kw0,kw] = construirBaseTrigonometrica(N,m,w0,dw,coseno,seno);
+
+
+  % === Calcular coeficientes para Min2 ===
   [alfa,b] = calcularCoeficientesMin2(Fi,g);
 
-% === Calcular la FFT === (transformada de fourier)
-Gk = fft(g,N);
 
-                                    % aca obtenes las amplitudes y fases de la transformada de fourier
-amplitudes_fft = abs(Gk(1:N/2+1));  % Solo la mitad de los coeficientes son útiles (debido a la simetría)
-fases_fft = angle(Gk(1:N/2+1));
 
-                                                        % normalizas las amplitudes de fft para que se puedan comparar
-amplitudes_fft = amplitudes_fft / max(amplitudes_fft);
+  % === Comparar g con P(t) ===
+  [P,r]= comparar_P_con_G(Fi,alfa,g);
+  graficarcomparacionPyG(t,P,g,r);
 
-% === Comparar amplitudes y fases ===
-                                         % Aquí puedes comparar las amplitudes de alfa (de Min2) con las de la FFT
-amplitudes_min2 = abs(alfa(2:2:end));    % Solo los términos relevantes de 'alfa'
-fases_min2 = angle(alfa(2:2:end));       % Fases de los coeficientes de mínimos cuadrados
 
-graficarComparaciones(amplitudes_min2,amplitudes_fft,fases_min2,fases_fft);
+
+  % === Calcular las frecuencias === (transformada de fourier)
+
+  [c,fase,kw0,kw]  = calcularAmplitudFase(alfa,m,kw0,kw);
+  graficarAmplitudFase(kw,c,fase);
+
 % === A ===
 disp("Hola Mundo!" )
 end
@@ -55,12 +55,16 @@ function graficarPrimerFuncion(t,g,figura)
 end
 
 %esta funcion lo que hace es construirnos la matriz phi
-function Fi = construirBaseTrigonometrica(N,m,w0,coseno,seno)
+function [Fi,kw0,kw] = construirBaseTrigonometrica(N,m,w0,dw,coseno,seno)
       Fi = ones(N, 2*m + 1); %inicializa en 1 cos(0)=1
+      kw0 = zeros(1,m+1);
+      kw = zeros(1,m+1);
       for k=1:m
-        for i=1:N
-              Fi(i,2*i) =coseno(k,w0,i); %en los pares coloca cosenos
-              Fi(i,2*i+1) = seno(k,w0,i); %en los impares coloca senos
+        kw0(k+1)=k*w0;  %
+        kw(k+1) = k*dw; % estas son las frecuencias utilizadas en la base trigonometrica para Min2, definen la frecuencia de cada termino coseno y seno
+        for j=1:N
+              Fi(j,2*k) =coseno(k,w0,j); %en los pares coloca cosenos
+              Fi(j,2*k+1) = seno(k,w0,j); %en los impares coloca senos
           endfor
       endfor
 end
@@ -73,20 +77,56 @@ function [alfa,b] = calcularCoeficientesMin2(Fi,g)
   disp('Coeficientes alfa y b:');
 end
 
-function graficarComparaciones(amplitudes_min2,amplitudes_fft,fases_min2,fases_fft)
-figure;
-subplot(2,1,1);
-stem(amplitudes_min2, 'r'); hold on;
-stem(amplitudes_fft, 'b');
-title('Comparación de Amplitudes: Min2 (rojo) vs FFT (azul)');
-grid on;
+function [P,r] = comparar_P_con_G(Fi,alfa,g)
+  P = Fi*alfa;
+  r = g-P;
+  disp("La norma del residuo es: ");
+  disp(norm(r,2));
 
-subplot(2,1,2);
-plot(fases_min2, 'r'); hold on;
-plot(fases_fft, 'b');
-title('Comparación de Fases: Min2 (rojo) vs FFT (azul)');
-grid on;
+  disp("La norma de g(t) es: ");
+  disp(norm(g,2));
 end
 
+
+function graficarcomparacionPyG(t,P,g,r)
+  figure(2);
+  title('P(t) y g(t) discretos');
+  grid on;
+  plot(t,P,'b',t,g,'r');
+
+
+  figure(3);
+  title('P,g y el residuo r')
+  grid on;
+  plot(t,P,'r',t,g,'b',t,r,'g')
+end
+
+
+function [c,fase,kw0,kw]= calcularAmplitudFase(alfa,m,kw0,kw)
+   c = zeros(1,m+1);
+   fase = zeros(1,m+1);
+
+   c(1) = abs(alfa(1));
+   fase(1)= 0;
+
+   for k=2:m+1
+     j = (k-1)*2;
+     c(k) = sqrt(alfa(j)^2+ alfa(j+1)^2); % Formula para la amplitud
+     fase(k) = atan(alfa(j+1)/alfa(j)); % Formula para la fase
+   endfor
+end
+
+function graficarAmplitudFase(kw,c,fase)
+figure(4);
+    subplot(2, 1, 1);
+    stem(kw, c, 'b');
+    grid on;
+    title('Amplitud para cada Frecuencia');
+    subplot(2, 1, 2);
+    plot(kw, fase, '-ob');
+    grid on;
+    title('Fase para cada Frecuencia');
+
+end
 
 
